@@ -245,9 +245,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ff06caed16847314698423d5308a67ac, type: 3}
       insertIndex: -1
       addedObject: {fileID: 250711213}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ff06caed16847314698423d5308a67ac, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 250711212}
   m_SourcePrefab: {fileID: 100100000, guid: ff06caed16847314698423d5308a67ac, type: 3}
 --- !u!1 &250711207 stripped
 GameObject:
@@ -268,7 +265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInputController: {fileID: 0}
   rb: {fileID: 250711214}
-  playerPowerUps: {fileID: 250711212}
+  playerPowerUps: {fileID: 0}
   moveSpeed: 5
   jumpForce: 7
   groundCheck: {fileID: 0}
@@ -326,28 +323,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &250711212
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250711207}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaab100c50c23b3409cedaab58e29d78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vidaInicial: 80
-  vidaMax: 100
-  velocidadBase: 30
-  textoVida: {fileID: 0}
-  textoVelocidad: {fileID: 0}
-  textoEscudo: {fileID: 0}
-  fxEscudo: {fileID: 0}
-  fxEscudoParticulas: {fileID: 0}
-  fxVelocidad: {fileID: 0}
-  fxCuracion: {fileID: 0}
 --- !u!136 &250711213
 CapsuleCollider:
   m_ObjectHideFlags: 0
