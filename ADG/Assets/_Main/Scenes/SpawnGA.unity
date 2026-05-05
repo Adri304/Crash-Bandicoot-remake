@@ -1264,8 +1264,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objetoPrefab: {fileID: 313667340572043890, guid: 1bad298d9c0e6d4428a0308283b3077d, type: 3}
   tiempoEntreSpawns: 2
-  rangoX: {x: 0, y: 2}
-  rangoZ: {x: 0, y: 0}
+  rangoX: {x: -5, y: 5}
+  rangoZ: {x: -5, y: 5}
 --- !u!1 &1972580189
 GameObject:
   m_ObjectHideFlags: 0

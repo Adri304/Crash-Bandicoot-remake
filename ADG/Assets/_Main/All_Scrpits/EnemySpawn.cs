@@ -32,3 +32,5 @@ public class Spawner : MonoBehaviour
         Instantiate(objetoPrefab, posicion, Quaternion.identity);
     }
 }
+// agregar un limite de generacion
+// generacion en cualquier parte del navmesh
