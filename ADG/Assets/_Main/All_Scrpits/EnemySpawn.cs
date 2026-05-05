@@ -27,8 +27,10 @@ public class Spawner : MonoBehaviour
         float x = Random.Range(rangoX.x, rangoX.y);
         float z = Random.Range(rangoZ.x, rangoZ.y);
 
-        Vector3 posicion = new Vector3(x, 0.5f, z); // altura sobre el plano
+        Vector3 posicion = new Vector3(x, 1.01f, z); // altura sobre el plano
 
         Instantiate(objetoPrefab, posicion, Quaternion.identity);
     }
 }
+// agregar un limite de generacion
+// generacion en cualquier parte del navmesh
