@@ -1,56 +1,119 @@
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.AI;
 
 public class Enemigo1 : MonoBehaviour
 {
-    public int rutina;
-    public float cronometro;
+    // REFERENCIAS
+    public Transform target;
+    public NavMeshAgent agent;
     public Animator ani;
-    public Quaternion angulo;
-    public float grado;
 
+    // DISTANCIAS
+    public float rangoVision = 5f;
+    public float rangoPatrulla = 10f;
 
-    void start()
+    // TIEMPO
+    public float tiempoEspera = 4f;
+    private float cronometro;
+
+    // ESTADO
+    private bool persiguiendo;
+
+    void Start()
     {
+        // OBTENER COMPONENTES
+        agent = GetComponent<NavMeshAgent>();
         ani = GetComponent<Animator>();
+
+        // BUSCAR JUGADOR
+        target = GameObject.Find("Link").transform;
+
+        // PRIMER PUNTO ALEATORIO
+        NuevoPunto();
     }
 
-public void Comportamiento_Enemigo()
+    void Update()
     {
-        cronometro += 1 * Time.deltaTime;
+        float distancia = Vector3.Distance(transform.position, target.position);
 
-        if(cronometro >= 4)
+        // SI EL JUGADOR ESTÁ CERCA
+        if (distancia <= rangoVision)
         {
-            rutina = Random.Range(0, 2);
-            cronometro = 0;
+            PersseguirJugador();
         }
-        switch (rutina)
+        else
         {
-            case 0:
+            Patrullar();
+        }
+
+        Animaciones();
+    }
+
+    void PersseguirJugador()
+    {
+        persiguiendo = true;
+
+        // MÁS VELOCIDAD AL CORRER
+        agent.speed = 3.5f;
+
+        // PERSEGUIR
+        agent.SetDestination(target.position);
+    }
+
+    void Patrullar()
+    {
+        if (persiguiendo)
+        {
+            persiguiendo = false;
+            NuevoPunto();
+        }
+
+        // VELOCIDAD NORMAL
+        agent.speed = 2f;
+
+        // SI YA LLEGÓ AL DESTINO
+        if (!agent.pathPending && agent.remainingDistance <= 0.5f)
+        {
+            cronometro += Time.deltaTime;
+
+            if (cronometro >= tiempoEspera)
+            {
+                NuevoPunto();
+                cronometro = 0;
+            }
+        }
+    }
+
+    void NuevoPunto()
+    {
+        // POSICIÓN ALEATORIA
+        Vector3 randomDirection = Random.insideUnitSphere * rangoPatrulla;
+
+        randomDirection += transform.position;
+
+        NavMeshHit hit;
+
+        // BUSCAR PUNTO VÁLIDO EN EL NAVMESH
+        if (NavMesh.SamplePosition(randomDirection, out hit, rangoPatrulla, 1))
+        {
+            Vector3 finalPosition = hit.position;
+
+            agent.SetDestination(finalPosition);
+        }
+    }
+
+    void Animaciones()
+    {
+        // SI SE ESTÁ MOVIENDO
+        if (agent.velocity.magnitude > 0.1f)
+        {
+            ani.SetBool("walk", !persiguiendo);
+            ani.SetBool("run", persiguiendo);
+        }
+        else
+        {
             ani.SetBool("walk", false);
-            break;
-
-            case 1:
-            grado = Random.Range(0, 360);
-            rutina++;
-            break;
-
-            case 2:
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, angulo, 0.5f);
-            transform.Translate(Vector3.forward * 1 * Time.deltaTime);
-            ani.SetBool("walk", true);
-            break;
-
-
-
+            ani.SetBool("run", false);
         }
     }
-
-void Update()
-    {
-        Comportamiento_Enemigo();
-    }
-
 }
-
