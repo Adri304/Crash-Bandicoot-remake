@@ -33,4 +33,4 @@ public class Spawner : MonoBehaviour
     }
 }
 // agregar un limite de generacion
-// generacion en cualquier parte del navmesh
+// generacion en cualquier parte del navmesh :D
