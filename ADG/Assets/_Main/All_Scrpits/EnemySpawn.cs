@@ -1,12 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Spawner : MonoBehaviour
+public class SpawnerNavMesh : MonoBehaviour
 {
-    public GameObject objetoPrefab;
+    public GameObject enemigoPrefab;
+
     public float tiempoEntreSpawns = 2f;
-    public Vector2 rangoX = new Vector2(-2, 2);
-    public Vector2 rangoZ = new Vector2(-2, 2);
+    public float radioSpawn = 10f;
 
     void Start()
     {
@@ -17,20 +18,23 @@ public class Spawner : MonoBehaviour
     {
         while (true)
         {
-            SpawnObjeto();
+            SpawnEnNavMesh();
+
             yield return new WaitForSeconds(tiempoEntreSpawns);
         }
     }
 
-    void SpawnObjeto()
+    void SpawnEnNavMesh()
     {
-        float x = Random.Range(rangoX.x, rangoX.y);
-        float z = Random.Range(rangoZ.x, rangoZ.y);
+        Vector3 puntoAleatorio = transform.position + Random.insideUnitSphere * radioSpawn;
 
-        Vector3 posicion = new Vector3(x, 1.01f, z); // altura sobre el plano
+        puntoAleatorio.y = 5f;
 
-        Instantiate(objetoPrefab, posicion, Quaternion.identity);
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(puntoAleatorio, out hit, 10f, NavMesh.AllAreas))
+        {
+            Instantiate(enemigoPrefab, hit.position + Vector3.up * 1f, Quaternion.identity);
+        }
     }
 }
-// agregar un limite de generacion
-// generacion en cualquier parte del navmesh :D
