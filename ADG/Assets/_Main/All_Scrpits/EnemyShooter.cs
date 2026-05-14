@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class EnemyShooter : MonoBehaviour
 {
@@ -7,101 +6,80 @@ public class EnemyShooter : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
 
-    [Header("Disparo")]
-    [SerializeField] private float fireRate = 1f;
-    [SerializeField] private float bulletSpeed = 180f;
+    [Header("Jugador")]
+    [SerializeField] private Transform player;
 
-    [Header("Pool")]
-    [SerializeField] private int poolSize = 20;
+    [Header("Disparo")]
+    [SerializeField] private float detectionRange = 10f;
+    [SerializeField] private float fireRate = 1f;
+    [SerializeField] private float bulletSpeed = 40f;
 
     private float timer;
 
-    // Lista de balas reciclables
-    private List<GameObject> bulletPool = new List<GameObject>();
-
-    void Start()
+    private void Update()
     {
-        CrearPool();
-    }
+        if (player == null)
+            return;
 
-    void Update()
-    {
+        // Distancia al jugador
+        float distance = Vector3.Distance(
+            transform.position,
+            player.position
+        );
+
+        // Si está lejos NO dispara
+        if (distance > detectionRange)
+            return;
+
+        // Mirar al jugador
+        Vector3 direction =
+            player.position - transform.position;
+
+        direction.y = 0f;
+
+        transform.rotation =
+            Quaternion.LookRotation(direction);
+
+        // Temporizador
         timer += Time.deltaTime;
 
         if (timer >= fireRate)
         {
-            Disparar();
+            Shoot();
             timer = 0f;
         }
     }
 
-    void CrearPool()
+    private void Shoot()
     {
-        for (int i = 0; i < poolSize; i++)
-        {
-            GameObject bullet = Instantiate(bulletPrefab);
+        Debug.Log("DISPARANDO");
 
-            // Desactivamos la bala
-            bullet.SetActive(false);
+        GameObject bullet = Instantiate(
+            bulletPrefab,
+            firePoint.position,
+            firePoint.rotation
+        );
 
-            // Desactivamos física mientras está guardada
-            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-
-            if (rb != null)
-            {
-                rb.isKinematic = true;
-            }
-
-            bulletPool.Add(bullet);
-        }
-    }
-
-    GameObject ObtenerBala()
-    {
-        for (int i = 0; i < bulletPool.Count; i++)
-        {
-            if (!bulletPool[i].activeInHierarchy)
-            {
-                return bulletPool[i];
-            }
-        }
-
-        return null;
-    }
-
-    void Disparar()
-    {
-        GameObject bullet = ObtenerBala();
-
-        if (bullet == null)
-        {
-            Debug.Log("No hay balas disponibles");
-            return;
-        }
-
-        bullet.transform.position = firePoint.position;
-        bullet.transform.rotation = firePoint.rotation;
-
-        bullet.SetActive(true);
-
-        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        Rigidbody rb =
+            bullet.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
-            // Activamos física
-            rb.isKinematic = false;
-
-            // Reiniciamos velocidades viejas
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-
-            Vector3 direccion = firePoint.forward;
-
-            // pequeña imperfección
-            direccion.x += Random.Range(-0.01f, 0.01f);
-            direccion.y += Random.Range(-0.01f, 0.01f);
-
-            rb.linearVelocity = direccion.normalized * bulletSpeed;
+            rb.linearVelocity =
+                firePoint.forward * bulletSpeed;
         }
+
+        Destroy(bullet, 5f);
+    }
+
+    // SOLO para ver el rango en escena
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        Gizmos.DrawWireSphere(
+            transform.position,
+            detectionRange
+        );
     }
 }

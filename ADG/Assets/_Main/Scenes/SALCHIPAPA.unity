@@ -968,11 +968,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b690e152692f174e9f08f1370051c09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 999251947}
+  bulletPrefab: {fileID: 1122964723992546, guid: 674adf642abf5614aae2995443c8250f, type: 3}
   firePoint: {fileID: 676110297}
-  fireRate: 1.5
-  bulletSpeed: 80
-  poolSize: 10
+  player: {fileID: 822394211}
+  detectionRange: 10
+  fireRate: 1
+  bulletSpeed: 20
 --- !u!1001 &999251946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1108,7 +1109,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  lifeTime: 3
 --- !u!1 &1088368938
 GameObject:
   m_ObjectHideFlags: 0
